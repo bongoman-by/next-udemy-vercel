@@ -1,6 +1,10 @@
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    outputStandalone: true
-  }
+  swcMinify: true,
+  images: {
+    domains: ['raw.githubusercontent.com'],
+  },
 }
+
+module.exports = nextConfig
