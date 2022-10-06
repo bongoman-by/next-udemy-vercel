@@ -25,13 +25,19 @@ export async function getStaticPaths() {
         params: { name },
       };
     });
-    return { paths, fallback: false };
+    return { paths, fallback: "blocking" };
   }
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { name } = params as { name: string };
-  return await getPokemonInfo(name);
+  const res = await getPokemonInfo(name);
+  if (!res) {
+    return {
+        notFound: true,
+    };
+  }
+  return res;
 };
 
 export default PokemonPageByName;

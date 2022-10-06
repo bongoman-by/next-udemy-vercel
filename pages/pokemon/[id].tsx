@@ -1,8 +1,8 @@
 import { GetStaticProps, NextPage } from "next";
 
-import {loadPokemonList } from "../../api";
+import { loadPokemonList } from "../../api";
 import { Sprites } from "../../interfaces";
-import { getPokemonInfo, } from "../../utils";
+import { getPokemonInfo } from "../../utils";
 
 import PokemonPage from "../../components/pokemon/PokemonPage";
 
@@ -13,13 +13,7 @@ export interface PokemonProps {
 }
 
 const PokemonById: NextPage<PokemonProps> = ({ id, name, sprites }) => {
-  return (
-    <PokemonPage
-      id={id}
-      name={name}
-      sprites={sprites}
-    />
-  );
+  return <PokemonPage id={id} name={name} sprites={sprites} />;
 };
 
 export async function getStaticPaths() {
@@ -34,13 +28,19 @@ export async function getStaticPaths() {
         params: { id: id },
       };
     });
-    return { paths, fallback: false };
+    return { paths, fallback: "blocking" };
   }
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params as { id: string };
-  return await getPokemonInfo(id);
+  const res = await getPokemonInfo(id);
+  if (!res) {
+    return {
+      notFound: true,
+    };
+  }
+  return res;
 };
 
 export default PokemonById;
